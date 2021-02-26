@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+</head>
+<body>
+
+<form method="post">
+<h1>Result</h1>
+<ul>
+    <li>test_sex : {{ session["test_sex"] }}</li>
+    <li>height : {{ session["height"] }}</li>
+    <li>weight : {{ session["weight"] }}</li>
+    <li>fat : {{ session["fat"] }}</li>
+    <li>core_cm : {{ session["core_cm"] }}</li>
+    <li>situp : {{ session["situp"] }}</li>
+    <li>sitflex : {{ session["sitflex"] }}</li>
+    <li>longrun : {{ session["longrun"] }}</li>
+    <li>run10m : {{ session["run10m"] }}</li>
+    <li>longjump : {{ session["longjump"] }}</li>
+</ul>
+    <div style="float:left;width:50%">
+        <canvas id="myChart" width="450",height="200"></canvas>
+    </div>
+    <div style="float:right;width:50%">
+        <canvas id="myRadarChart" width="450",height="200"></canvas>
+    </div><br>
+
+<script>
+var ctx = document.getElementById("myChart").getContext('2d');
+var options = {
+    responsive:false,
+    scales: {
+        xAxes: [{
+            gridLines: {
+                offsetGridLines: true
+            }
+        }]
+    }
+};
+var myChart = new Chart(ctx, {
+    type: 'horizontalBar',
+    data: {
+        labels: ['situp','sitflex','longrun','run10m','longjump'],
+        datasets: [
+            {
+            label: '나의 기록',
+            data: [{{session['situp']}},  {{session['sitflex']}}, {{session['longrun']}}
+                ,{{session['run10m']}},{{session['longjump']}}
+            ],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)'],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)'],
+            borderWidth: 1
+        }
+        ,
+		{
+            label: "평균값",
+            data: [{{pivot_data[0]}},{{pivot_data[1]}},{{pivot_data[2]}}
+                ,{{pivot_data[3]}},{{pivot_data[4]}}
+            ],
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+        }
+
+
+        ]
+    },
+    options: options
+});
+
+</script>
+<script>
+var ctx = document.getElementById("myRadarChart").getContext('2d');
+var options = {
+    responsive:false,
+    scales: {
+        xAxes: [{
+            gridLines: {
+                offsetGridLines: true
+            }
+        }]
+    }
+};
+var myRadarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+        labels: ['situp','sitflex','longrun','run10m','longjump'],
+        datasets: [
+            {
+            label: '나의 기록',
+            data: [{{session['situp']}},  {{session['sitflex']}}, {{session['longrun']}}
+                ,{{session['run10m']}},{{session['longjump']}}
+            ],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)'],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)'],
+            borderWidth: 1
+        }
+        ,
+		{
+            label: "평균값",
+            data: [{{pivot_data[0]}},{{pivot_data[1]}},{{pivot_data[2]}}
+                ,{{pivot_data[3]}},{{pivot_data[4]}}
+            ],
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+        }
+
+
+        ]
+    },
+    options: options
+});
+</script>
+<h2>당신의 신체나이는 : {{results}}세 입니다.</h2>
+
+</form>
+</body>
+</html>
