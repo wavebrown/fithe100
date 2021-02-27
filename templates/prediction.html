@@ -13,7 +13,7 @@
     <li>test_sex : {{ session["test_sex"] }}</li>
     <li>height : {{ session["height"] }}</li>
     <li>weight : {{ session["weight"] }}</li>
-    <li>fat : {{ session["fat"] }}</li>
+<!--    <li>fat : {{ session["fat"] }}</li>-->
     <li>core_cm : {{ session["core_cm"] }}</li>
     <li>situp : {{ session["situp"] }}</li>
     <li>sitflex : {{ session["sitflex"] }}</li>
@@ -159,7 +159,8 @@ var myRadarChart = new Chart(ctx, {
     options: options
 });
 </script>
-<h2>당신의 신체나이는 : {{results}}세 입니다.</h2>
+<h2>당신의 신체나이는 : {{results_age}}세 입니다.</h2>
+<h2>당신의 체지방율은 : {{results_body}} 입니다.</h2>
 
 </form>
 </body>
