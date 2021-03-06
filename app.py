@@ -5,7 +5,6 @@ from wtforms.validators import NumberRange
 import pandas as pd
 from tensorflow.keras.models import load_model
 import joblib
-import seaborn as sns
 
 
 def return_prediction(model, scaler, sample_json):
@@ -68,42 +67,57 @@ def index():
         session['weight'] = form.weight.data
         # session['fat'] = form.fat.data
         session['core_cm'] = form.core_cm.data
-        session['situp'] = form.situp.data
-        session['sitflex'] = form.sitflex.data
-        session['longrun'] = form.longrun.data
-        session['run10m'] = form.run10m.data
-        session['longjump'] = int(form.longjump.data) / 10
         print(form.test_sex.data)
         print(form.height.data)
         print(form.weight.data)
-        # print(form.fat.data)
-        print(form.core_cm.data)
 
-        return redirect(url_for("prediction"))
-    return render_template('index.html', form=form)
 
-@app.route('/prediction')
+        return redirect(url_for("update"))
+    return render_template('survey_form.html', form=form)
+
+@app.route('/update', methods=('POST','GET'))
+def update():
+    print(session);
+    content1 ={}
+
+    content1['test_sex'] = session['test_sex']
+    content1['height'] =  session['height']
+    content1['weight'] = session['weight']
+    content1['core_cm'] = session['core_cm']
+
+    print(content1);
+    return render_template('sUpdateForm.html', content1=content1)
+
+@app.route('/prediction', methods=('POST','GET'))
 def prediction():
-
+    form = GreetUserForm();
+    print(form.situp.data);
+    print(form.sitflex.data);
     content = {}
 
-    content['test_sex'] = float(session['test_sex'])
-    content['height'] = float(session['height'])
-    content['weight'] = float(session['weight'])
-    # content['fat'] = float(session['fat'])
-    content['core_cm'] = float(session['core_cm'])
-    content['situp'] = float(session['situp'])
-    content['sitflex'] = float(session['sitflex'])
-    content['longrun'] = float(session['longrun'])
-    content['run10m'] = float(session['run10m'])
-    content['longjump'] = float(session['longjump']) / 10
+    content['test_sex'] = int(session['test_sex'])
+    content['height'] = int(session['height'])
+    content['weight'] = int(session['weight'])
+    content['core_cm'] = int(session['core_cm'])
+    content['situp'] = int(form.situp.data)
+    content['sitflex'] = int(form.sitflex.data)
+    content['longrun'] = int(form.longrun.data)
+    content['run10m'] = int(form.run10m.data)
+    content['longjump'] = int(form.longjump.data) / 10
+
     print(content)
     if(content['test_sex'] == 0):
         results_age = return_prediction(model=F_modelage,scaler=F_scalerage,sample_json=content)
         results_body = return_prediction(model=F_model, scaler=F_scaler, sample_json=content)
+        gender = "남성" #--------------------------------------------------------------------#
+        print(gender)
     elif (content['test_sex'] == 1):
         results_age = return_prediction(model=M_modelage, scaler=M_scalerage, sample_json=content)
+        print("results_age", results_age)
         results_body = return_prediction(model=F_model, scaler=F_scaler, sample_json=content)
+        gender = "여성" #--------------------------------------------------------------------#
+        print(gender)
+
 
     # pivot data select
     group_label = str(session['test_sex'])
@@ -123,9 +137,12 @@ def prediction():
         pivot_data = [pivot_select.iloc[0, 0], pivot_select.iloc[0, 1], pivot_select.iloc[0, 2],
                       pivot_select.iloc[0, 3], pivot_select.iloc[0, 4]]
 
+
+
     # 예측 결과 리턴
     return render_template('prediction.html', results_age=results_age,results_body=results_body, pivot_col=pivot_col,
-                           pivot_data=pivot_data)
+                           pivot_data=pivot_data,content=content, gender=gender)
+
 
 
 
